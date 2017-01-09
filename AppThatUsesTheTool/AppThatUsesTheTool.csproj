@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="customConfig.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -58,9 +59,10 @@
   </Target>
   -->
   <PropertyGroup>
-     <MyCustomToolPath>$([System.IO.Path]::GetFullPath("$(ProjectDir)..\BlogPost\$(OutDir)\BlogPost.exe"))</MyCustomToolPath>
+    <MyCustomToolPath>$([System.IO.Path]::GetFullPath("$(ProjectDir)..\BlogPost\$(OutDir)\BlogPost.exe"))</MyCustomToolPath>
+    <MyInptuFile>$(ProjectDir)customConfig.json</MyInptuFile>
   </PropertyGroup>
   <Target Name="RunMyCustomTool" BeforeTargets="Build">
-  	<Exec Command="$(MyCustomToolPath)" IgnoreExitCode="true" />
+    <Exec Command="$(MyCustomToolPath) &quot;$(MyInptuFile)&quot;" IgnoreExitCode="true" />
   </Target>
 </Project>

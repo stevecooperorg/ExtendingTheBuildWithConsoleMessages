@@ -1,16 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace BlogPost
 {
+    class DataFile
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
-            WriteBuildError("Error", @"c:\src\BlogPost\BlogPost\Program.cs", 12, "It's bad, jim!");
+            try
+            {
+                var fileContent = File.ReadAllText(args[0]);
+                var file = JsonConvert.DeserializeObject<DataFile>(fileContent);
+                if (file.StartDate > file.EndDate)
+                {
+                    WriteBuildError("Error", args[0], 1, $"The start date is after the end date");
+                    return;
+                }
+            }
+            catch
+            {
+                WriteBuildError("Error", new Uri(Assembly.GetExecutingAssembly().Location).AbsolutePath, 1, $"This tool expects 1 command-line argument");
+            }
         }
 
         private  static void WriteBuildError(string type, string filePath, int lineNumber, string message)
